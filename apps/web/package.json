@@ -1,0 +1,23 @@
+{
+  "name": "web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0 && prettier --ignore-path ../../.prettierignore --check .",
+    "test": "vitest run --passWithNoTests",
+    "build": "next build"
+  },
+  "dependencies": {
+    "@wonderloop/api-client": "workspace:*",
+    "@wonderloop/core": "workspace:*",
+    "next": "^14.2.23",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@wonderloop/config": "workspace:*"
+  }
+}

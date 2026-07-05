@@ -1,0 +1,122 @@
+{
+  "topic_id": "animals-bird-powerline",
+  "version": 1,
+  "age_band": "5-8",
+  "category": "animals",
+  "title": {
+    "en": "Why Don't Birds Get Shocked on Power Lines?",
+    "zh": "为什么小鸟站在电线上不会触电？"
+  },
+  "knowledge_outline": [
+    "Electric current needs a path to flow.",
+    "A bird standing on one wire has very little voltage difference between its feet.",
+    "Touching two wires, or a wire and the ground, can make a dangerous path."
+  ],
+  "fact_claims": [
+    {
+      "claim": "A bird on one wire is usually not shocked because its two feet are at almost the same electric potential.",
+      "source_url": "https://www.energy.gov/",
+      "source_note": "General public electrical-safety explanation used for seed content only."
+    }
+  ],
+  "segments": [
+    {
+      "type": "hook",
+      "pause_after": false,
+      "script": {
+        "en": "A bird lands on a wire. The wire carries power, but the bird keeps singing.",
+        "zh": "一只小鸟落在电线上。电线有电，可小鸟还在唱歌。"
+      }
+    },
+    {
+      "type": "predict",
+      "pause_after": true,
+      "question": {
+        "en": "What do you think keeps the bird safe?",
+        "zh": "你觉得小鸟为什么没事？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "en": "Its feet block electricity.",
+          "zh": "它的脚会挡住电。"
+        },
+        {
+          "id": "b",
+          "en": "Electricity does not get an easy path through it.",
+          "zh": "电没有一条容易穿过它身体的路。"
+        },
+        {
+          "id": "c",
+          "en": "The wire turns off for birds.",
+          "zh": "电线看见小鸟就关掉了。"
+        }
+      ],
+      "no_wrong_answer_note": {
+        "en": "Any guess is welcome. We will listen for clues.",
+        "zh": "怎么猜都可以，我们一起听线索。"
+      }
+    },
+    {
+      "type": "story",
+      "pause_after": false,
+      "script": {
+        "en": "Mia saw a sparrow on a power line. Her dad said electricity is like water: it flows when it has a path. The bird's feet are on the same wire, almost like standing on one flat step. There is no big push from one foot to the other. But wires are not toys. People should stay far away and ask a grown-up for help.",
+        "zh": "米米看见一只小麻雀站在电线上。爸爸说，电有点像水，要有一条路才会流。小鸟两只脚站在同一根线上，就像站在同一级台阶上，两只脚之间没有很大的推力。不过电线不是玩具，小朋友要离电线远远的，有事找大人帮忙。"
+      }
+    },
+    {
+      "type": "think",
+      "pause_after": true,
+      "question": {
+        "en": "What if one foot touched another wire?",
+        "zh": "如果一只脚又碰到另一根电线，会怎样？"
+      },
+      "answer_guidance": {
+        "en": "That could make a path for electricity, so it is dangerous.",
+        "zh": "那可能形成一条让电通过的路，所以很危险。"
+      }
+    },
+    {
+      "type": "teach_back",
+      "pause_after": true,
+      "prompt": {
+        "en": "Tell your grown-up why the bird is safe in one sentence.",
+        "zh": "用一句话告诉大人：小鸟为什么没事？"
+      }
+    },
+    {
+      "type": "new_question",
+      "pause_after": true,
+      "prompt": {
+        "en": "What else do you wonder about electricity?",
+        "zh": "关于电，你还想知道什么？"
+      }
+    }
+  ],
+  "recall_question": {
+    "en": "Why was the bird safe on one wire?",
+    "zh": "小鸟站在一根电线上为什么没事？",
+    "answer_hint": {
+      "en": "Its feet were on the same wire, so electricity did not get an easy path through it.",
+      "zh": "它两只脚在同一根线上，电没有一条容易穿过身体的路。"
+    }
+  },
+  "bilingual_bridge": [
+    {
+      "en": "electricity",
+      "zh": "电",
+      "pinyin": "dian"
+    },
+    {
+      "en": "power line",
+      "zh": "电线",
+      "pinyin": "dian xian"
+    }
+  ],
+  "sensitivity": "low",
+  "estimated_duration_sec": {
+    "en": 330,
+    "zh": 360
+  }
+}

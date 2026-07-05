@@ -1,0 +1,122 @@
+{
+  "topic_id": "language-two-languages",
+  "version": 1,
+  "age_band": "5-8",
+  "category": "language_culture",
+  "title": {
+    "en": "Why Does Our Family Use Two Languages?",
+    "zh": "为什么我们家会说两种话？"
+  },
+  "knowledge_outline": [
+    "Families use languages to connect with people and places.",
+    "Using two languages can help a child understand more words and stories.",
+    "Switching languages is a normal part of many bilingual homes."
+  ],
+  "fact_claims": [
+    {
+      "claim": "Many families use more than one language at home to communicate with different people and communities.",
+      "source_url": "https://www.naeyc.org/",
+      "source_note": "Early childhood bilingual-family guidance used for seed content only."
+    }
+  ],
+  "segments": [
+    {
+      "type": "hook",
+      "pause_after": false,
+      "script": {
+        "en": "At breakfast, one family says good morning and zao an at the same table.",
+        "zh": "早餐桌上，一家人一会儿说早安，一会儿说 good morning。"
+      }
+    },
+    {
+      "type": "predict",
+      "pause_after": true,
+      "question": {
+        "en": "Why might a family use two languages?",
+        "zh": "一家人为什么会用两种语言呢？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "en": "One language is for weekdays only.",
+          "zh": "一种语言只能周一到周五用。"
+        },
+        {
+          "id": "b",
+          "en": "Different words help us talk with different people.",
+          "zh": "不同的词能帮我们和不同的人说话。"
+        },
+        {
+          "id": "c",
+          "en": "The words are playing hide-and-seek.",
+          "zh": "词语在玩捉迷藏。"
+        }
+      ],
+      "no_wrong_answer_note": {
+        "en": "There are many good guesses.",
+        "zh": "很多猜法都很好。"
+      }
+    },
+    {
+      "type": "story",
+      "pause_after": false,
+      "script": {
+        "en": "Leo called Grandma and said, ni hao. Then he told his teacher, good morning. His mom said languages are like keys. One key opens a chat with Grandma. Another key opens a chat at school. In their home, both keys belong on the same ring.",
+        "zh": "乐乐给奶奶打电话，说：你好。到学校见到老师，他又说：good morning。妈妈说，语言像钥匙。一把钥匙打开和奶奶聊天的门，一把钥匙打开和学校聊天的门。在我们家，两把钥匙都挂在同一个钥匙圈上。"
+      }
+    },
+    {
+      "type": "think",
+      "pause_after": true,
+      "question": {
+        "en": "When would you choose Chinese, and when would you choose English?",
+        "zh": "什么时候你会选中文，什么时候会选英文？"
+      },
+      "answer_guidance": {
+        "en": "The child may name family, school, books, songs, or friends.",
+        "zh": "孩子可以说家人、学校、书、歌或者朋友。"
+      }
+    },
+    {
+      "type": "teach_back",
+      "pause_after": true,
+      "prompt": {
+        "en": "Tell your grown-up one reason two languages can help.",
+        "zh": "告诉大人：两种语言有什么用？"
+      }
+    },
+    {
+      "type": "new_question",
+      "pause_after": true,
+      "prompt": {
+        "en": "What other word do you know in two languages?",
+        "zh": "你还知道哪个词有两种说法？"
+      }
+    }
+  ],
+  "recall_question": {
+    "en": "Why did Leo's family use two languages?",
+    "zh": "乐乐家为什么用两种语言？",
+    "answer_hint": {
+      "en": "Different languages helped them talk with different people.",
+      "zh": "不同语言帮他们和不同的人聊天。"
+    }
+  },
+  "bilingual_bridge": [
+    {
+      "en": "language",
+      "zh": "语言",
+      "pinyin": "yu yan"
+    },
+    {
+      "en": "family",
+      "zh": "家庭",
+      "pinyin": "jia ting"
+    }
+  ],
+  "sensitivity": "none",
+  "estimated_duration_sec": {
+    "en": 320,
+    "zh": 345
+  }
+}

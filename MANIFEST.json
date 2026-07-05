@@ -1,0 +1,454 @@
+[
+  {
+    "path": "00_originals/内容管线 Prompt 套件.md",
+    "source": "内容管线 Prompt 套件.md",
+    "source_lines": [
+      1,
+      822
+    ],
+    "sha256": "89a4386117559951935e09f5cf5ba14704062edfec826d4b171046ef38041614",
+    "content_transform": "verbatim copy"
+  },
+  {
+    "path": "00_originals/CLAUDE.md",
+    "source": "CLAUDE.md",
+    "source_lines": [
+      1,
+      590
+    ],
+    "sha256": "1d75f8cc098a36496804cb9ad44cf86fb7dd038bee5d9309912685f465de5503",
+    "content_transform": "verbatim copy"
+  },
+  {
+    "path": "00_originals/Phase 1 任务分解.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      1,
+      540
+    ],
+    "sha256": "653358a4fcc20b22c4f05ce5b3b5c304d33033b1db38db069973d35902d78b76",
+    "content_transform": "verbatim copy"
+  },
+  {
+    "path": "00_originals/4.md",
+    "source": "4.md",
+    "source_lines": [
+      1,
+      250
+    ],
+    "sha256": "3c433f022305f1083a759e06d7344a35c9eca8c2aa545971411a9c992015f1ce",
+    "content_transform": "verbatim copy"
+  },
+  {
+    "path": "01_shared/CLAUDE.md",
+    "source": "CLAUDE.md",
+    "source_lines": [
+      6,
+      136
+    ],
+    "sha256": "7ea34f26560bb39424af984e1a48b3d762926f220d947d19a7af71143ea0733c",
+    "content_transform": "none"
+  },
+  {
+    "path": "01_shared/AGENTS.md",
+    "source": "CLAUDE.md",
+    "source_lines": [
+      468,
+      571
+    ],
+    "sha256": "0c505a3018341a796f4a1620078866da69e9f81b116d036e60bf5d9d11fe4862",
+    "content_transform": "none"
+  },
+  {
+    "path": "01_shared/supabase/migrations/0001_init.sql",
+    "source": "CLAUDE.md",
+    "source_lines": [
+      140,
+      455
+    ],
+    "sha256": "2e0d117eaedbdfeb1562eb8326bc1772406b583aa8745387ed906a07adfcff49",
+    "content_transform": "none"
+  },
+  {
+    "path": "01_shared/docs/rls-test-matrix.md",
+    "source": "CLAUDE.md",
+    "source_lines": [
+      457,
+      465
+    ],
+    "sha256": "4baa3a48042d6d578c935fbfbc1465181111aedbeb73d7578ee8e277d5888b22",
+    "content_transform": "classification header prepended; source slice unchanged"
+  },
+  {
+    "path": "01_shared/docs/product-decisions.md",
+    "source": "内容管线 Prompt 套件.md",
+    "source_lines": [
+      241,
+      405
+    ],
+    "sha256": "d1e9cad101bab26b5898de56970a10373b8e2b52d83e3c6df481fad157e9156d",
+    "content_transform": "classification header prepended; source slice unchanged"
+  },
+  {
+    "path": "01_shared/docs/content-pipeline-spec.md",
+    "source": "内容管线 Prompt 套件.md",
+    "source_lines": [
+      421,
+      822
+    ],
+    "sha256": "40ddd6c94172af0914fd8468fde59ed4b1e6beafbb436e52f103a1d3b81770c8",
+    "content_transform": "classification header prepended; source slice unchanged"
+  },
+  {
+    "path": "01_shared/docs/phase-roadmap.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      1,
+      539
+    ],
+    "sha256": "f39de00a6cf6038b65e8597183e2e43c7d98b036c8ee18b334e39f857752b45f",
+    "content_transform": "none"
+  },
+  {
+    "path": "01_shared/docs/document-relationship.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      525,
+      539
+    ],
+    "sha256": "571a656ee5bd6ff4f9b1ccddaca1a9ee968ff9e764638065fde8b777ec63dd40",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/01_foundation/PROJECT.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "322217b16104618eb885345d7fdb158c4eb3a8ff3165751ce65a06c487001f67",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/01_foundation/CODEX_START.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "1e4cea6a7afc3ef10ddb71420d9bfa9a853b1967a3d16aee5930dd6fe6c76061",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/01_foundation/tasks/P1-01-foundation.md",
+    "source": "4.md",
+    "source_lines": [
+      1,
+      112
+    ],
+    "sha256": "1c1ca0a5afc4a10ce5da9297a063d2addf4550c600fb3871f25533258032cb1b",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/PROJECT.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "a4274a79c6f13418f5bc591f51bee46d6c284b926a8c64509546ba1e8548dd63",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/02_web_mvp/CODEX_START.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "1e4cea6a7afc3ef10ddb71420d9bfa9a853b1967a3d16aee5930dd6fe6c76061",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-02-landing-waitlist.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      28,
+      60
+    ],
+    "sha256": "60dafe56bee4fb2eba89e4e960061ccf26ed25f207c23432427f2f4f9865f0bd",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-03-auth-family.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      61,
+      90
+    ],
+    "sha256": "4869e651df8a3ea681b7557a778072ba3a466d634d5dec8a455108bf15f79a3a",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-04-audio-player.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      91,
+      124
+    ],
+    "sha256": "91e91382844b181df0725b678455902174f65de72a34d886bb651c91c31c54df",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-05-loop-state-machine.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      125,
+      162
+    ],
+    "sha256": "8cb1c3c0f157d76bf8bcc3fc5b17cf0b4ea9e9ee9d04eb248dd145a1a2d4671a",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-06-session-persistence.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      163,
+      185
+    ],
+    "sha256": "9421eb7436448d7aa700138c97d82bb1a538b27e1901126789d78b325e742f34",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-07-spaced-recall.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      186,
+      207
+    ],
+    "sha256": "b5bf29073ba6f31c62dcb66f5d803bead939136a753e6c82334805250af2e75e",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-08-today-page.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      208,
+      235
+    ],
+    "sha256": "0c4b1c5852aa68ffcff05d8533de79db8232e7438a59e36217b9e89a2b1f5a05",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-09-calendar.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      236,
+      253
+    ],
+    "sha256": "6638fe4aed6242876c50cea72be600bab6078bad554c60b32523111cc67ae9f0",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/02_web_mvp/tasks/P1-10-question-book.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      254,
+      272
+    ],
+    "sha256": "aea5aa565b71629a2972f27a9e4f82fe951eb58c20576bc35982e63f1cecbfd1",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/03_content_pipeline/PROJECT.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "b0b54f91c5cef3f9f44f40df36bfcc28a235597520f3abfc7e9dce52f978df5c",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/03_content_pipeline/CODEX_START.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "1e4cea6a7afc3ef10ddb71420d9bfa9a853b1967a3d16aee5930dd6fe6c76061",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/03_content_pipeline/tasks/CONTENT-SAMPLE-VALIDATION.md",
+    "source": "4.md",
+    "source_lines": [
+      114,
+      197
+    ],
+    "sha256": "5fd09f449c386f1c1c2596f20d1fdd3191d62d17de7f4be62ff3b3b8f1990782",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/03_content_pipeline/tasks/P1-11-content-generate-review.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      273,
+      293
+    ],
+    "sha256": "dca1c9ff0a7c80ed542ede7b5b89f9a7690608e38e1922d21068a8a44509d42a",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/03_content_pipeline/tasks/P1-12-review-ui.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      294,
+      317
+    ],
+    "sha256": "b20301e4212043ea18db3e101538fafe10145c96c7efd6a426ee4ae4c5104c59",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/03_content_pipeline/tasks/P1-13-tts-publish.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      318,
+      344
+    ],
+    "sha256": "223c61b2e4c639fa790266bb2147f91c37414d09ef00133f26004fdaa807c11e",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/03_content_pipeline/tasks/P1-14-content-sprint.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      345,
+      358
+    ],
+    "sha256": "be27aa448d24869aa79572efc245f6adceaa283e0b39d7665b384e42357ca74c",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/04_retention_analytics_launch/PROJECT.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "9c7c58ee3b764b5cf8d47e48ef37999e1d79d60f800298a4ce460b824e8c856f",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/04_retention_analytics_launch/CODEX_START.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "1e4cea6a7afc3ef10ddb71420d9bfa9a853b1967a3d16aee5930dd6fe6c76061",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/04_retention_analytics_launch/tasks/P1-15-weekly-digest.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      359,
+      381
+    ],
+    "sha256": "37b488a2e8e4abee2cc477450d9541d105bec1211c29a79645b8ba0a8ff4ad1f",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/04_retention_analytics_launch/tasks/P1-16-analytics-whf.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      382,
+      405
+    ],
+    "sha256": "aaff40432684104a944c94da04d83ab67b1038e6bdbf8072ba9a73fb88b7aebe",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/04_retention_analytics_launch/tasks/P1-17-free-rotation.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      406,
+      424
+    ],
+    "sha256": "bec0a5a005e37a2a347de83abbd5fe4e3b1f0a92b03cc1123124b9c4b431347d",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/04_retention_analytics_launch/tasks/P1-18-launch-audit.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      425,
+      452
+    ],
+    "sha256": "81dad715b3e8acc3edc2b7e7e8fa9f7625a5c3bd0aea1ec0defb95eed7685de5",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/05_monetization/PROJECT.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "dc8e1989797ad6e22af01392c2430f08b7647916f89f40957aedc5d93caf6b8e",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/05_monetization/CODEX_START.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "1e4cea6a7afc3ef10ddb71420d9bfa9a853b1967a3d16aee5930dd6fe6c76061",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/05_monetization/tasks/PHASE-2-MONETIZATION.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      453,
+      506
+    ],
+    "sha256": "022c400ae85d2335dfdf0e27eb178b532c937c736084271ab05f6c43b3fceec2",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/06_ios/PROJECT.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "33664a65d7a1d1578deb9116478efecd79bd7cac8d171dd935126be8522df8ed",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/06_ios/CODEX_START.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "1e4cea6a7afc3ef10ddb71420d9bfa9a853b1967a3d16aee5930dd6fe6c76061",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/06_ios/tasks/PHASE-3-IOS.md",
+    "source": "Phase 1 任务分解.md",
+    "source_lines": [
+      507,
+      524
+    ],
+    "sha256": "10a0d460ce804781d7f1433856427e0a8cad9cea55a2e5013572f6d06ff67e8a",
+    "content_transform": "none"
+  },
+  {
+    "path": "02_projects/07_growth_operations/PROJECT.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "58519633c3becdcdd7652e80889d0f11804b22309743fe820a783a326458d8c2",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/07_growth_operations/CODEX_START.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "1e4cea6a7afc3ef10ddb71420d9bfa9a853b1967a3d16aee5930dd6fe6c76061",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "02_projects/07_growth_operations/tasks/COLD-START-PLAYBOOK.md",
+    "source": "4.md",
+    "source_lines": [
+      198,
+      244
+    ],
+    "sha256": "03bac96ccf4a38a932c20c18f8368ac415fb2b870dd3508ad6e9fe4d212174b8",
+    "content_transform": "none"
+  },
+  {
+    "path": "START_HERE.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "e7252f7c6c9061b1af83e087348b2e15b2ebc173bde6096974e3e0a7f323f6f8",
+    "content_transform": "classification metadata"
+  },
+  {
+    "path": "SOURCE_MAP.md",
+    "source": null,
+    "source_lines": null,
+    "sha256": "f20fdcc8d18c26ff0e1b0fcf04d98e0d7db1243b5d174939448d4d6d65dd52ca",
+    "content_transform": "classification metadata"
+  }
+]

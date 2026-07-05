@@ -1,0 +1,12 @@
+{
+  "name": "content",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "node -e \"process.exit(0)\"",
+    "lint": "prettier --ignore-path ../.prettierignore --check .",
+    "test": "vitest run --passWithNoTests",
+    "build": "node -e \"process.exit(0)\""
+  }
+}
