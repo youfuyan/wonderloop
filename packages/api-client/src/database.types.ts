@@ -446,6 +446,7 @@ export type Database = {
     }
     Functions: {
       current_family_id: { Args: never; Returns: string }
+      delete_family_cascade: { Args: never; Returns: string }
       get_full_episode: { Args: { p_episode_id: string }; Returns: Json }
       has_entitlement: { Args: { fam: string }; Returns: boolean }
     }

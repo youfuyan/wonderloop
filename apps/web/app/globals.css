@@ -416,3 +416,160 @@ audio {
     padding: 18px;
   }
 }
+
+.authPage {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  background: #eef4ef;
+  padding: 32px 20px;
+}
+
+.authPanel {
+  display: grid;
+  width: min(720px, 100%);
+  gap: 24px;
+  border: 1px solid rgba(32, 57, 47, 0.14);
+  border-radius: 8px;
+  background: #fffdf8;
+  padding: clamp(24px, 4vw, 40px);
+  box-shadow: 0 24px 80px rgba(23, 34, 31, 0.12);
+}
+
+.authHeader {
+  display: grid;
+  gap: 12px;
+}
+
+.authHeader h1,
+.settingsSection h2 {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  color: #17221f;
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.settingsSection h2 {
+  font-size: 24px;
+}
+
+.authHeader p,
+.dangerZone p {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  color: #465a53;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.authForm,
+.childForm,
+.settingsSection,
+.dangerZone {
+  display: grid;
+  gap: 16px;
+}
+
+.authForm label,
+.childForm label {
+  display: grid;
+  gap: 8px;
+  color: #17221f;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.authForm label > span,
+.childForm label > span {
+  display: grid;
+  gap: 2px;
+}
+
+.authForm input,
+.authForm select,
+.childForm input,
+.childForm select {
+  min-height: 48px;
+  width: 100%;
+  border: 1px solid #cfc7b6;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0 12px;
+  color: #17221f;
+}
+
+.authPanel button,
+.linkButton {
+  display: grid;
+  min-height: 50px;
+  place-items: center;
+  gap: 2px;
+  border: 0;
+  border-radius: 8px;
+  background: #ef7b57;
+  color: #ffffff;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+}
+
+.authPanel button:disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
+.secondaryAction {
+  border: 1px solid rgba(32, 57, 47, 0.22) !important;
+  background: #ffffff !important;
+  color: #20392f !important;
+}
+
+.buttonRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.childList,
+.childEditorList {
+  display: grid;
+  gap: 10px;
+}
+
+.childRow,
+.childEditor {
+  border: 1px solid rgba(32, 57, 47, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.childRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dangerZone {
+  border-top: 1px solid rgba(32, 57, 47, 0.14);
+  padding-top: 20px;
+}
+
+.dangerButton {
+  background: #9f3324 !important;
+}
+
+.dangerText {
+  color: #9f3324 !important;
+}
+
+@media (max-width: 560px) {
+  .buttonRow {
+    grid-template-columns: 1fr;
+  }
+}
