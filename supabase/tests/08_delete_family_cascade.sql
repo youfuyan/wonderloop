@@ -39,10 +39,11 @@ from delete_fixture;
 set local role authenticated;
 select tests.set_auth_context(tests.user_a());
 
-select is(
-  public.delete_family_cascade(),
-  tests.user_a(),
-  'authenticated user can delete their family cascade and get auth user id'
+select throws_ok(
+  $$select public.delete_family_cascade()$$,
+  '42501',
+  null,
+  'authenticated users cannot directly invoke the family delete RPC'
 );
 
 reset role;

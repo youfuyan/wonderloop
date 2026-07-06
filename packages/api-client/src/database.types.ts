@@ -272,6 +272,7 @@ export type Database = {
           email: string
           id: string
           language_pref: Database["public"]["Enums"]["language_mode"]
+          onboarding_completed_at: string | null
           timezone: string
           updated_at: string
         }
@@ -281,6 +282,7 @@ export type Database = {
           email: string
           id?: string
           language_pref?: Database["public"]["Enums"]["language_mode"]
+          onboarding_completed_at?: string | null
           timezone?: string
           updated_at?: string
         }
@@ -290,6 +292,7 @@ export type Database = {
           email?: string
           id?: string
           language_pref?: Database["public"]["Enums"]["language_mode"]
+          onboarding_completed_at?: string | null
           timezone?: string
           updated_at?: string
         }

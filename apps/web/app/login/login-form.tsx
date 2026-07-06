@@ -9,11 +9,23 @@ import type { MessageKey } from "@wonderloop/core";
 import { BilingualCopy } from "../auth/bilingual-copy";
 import {
   getBrowserSupabase,
-  hasCompletedOnboarding,
-  markAuthenticated
+  markAuthenticated,
+  markOnboardingComplete,
+  markOnboardingIncomplete
 } from "../auth/session";
 
 type LoginState = "idle" | "submitting" | "sent" | "redirecting" | "error";
+
+const allowedNextPaths = new Set(["/today", "/calendar", "/questions", "/settings"]);
+
+function safeNextPath(nextPath: string): string {
+  if (!nextPath.startsWith("/") || nextPath.startsWith("//")) {
+    return "/today";
+  }
+
+  const pathname = nextPath.split(/[?#]/, 1)[0] ?? "/today";
+  return allowedNextPaths.has(pathname) ? nextPath : "/today";
+}
 
 export function LoginForm() {
   const router = useRouter();
@@ -37,35 +49,44 @@ export function LoginForm() {
       return;
     }
 
-    function routeAfterSignIn(userId: string) {
-      if (hasCompletedOnboarding(userId)) {
-        router.replace(nextPath);
+    const client = supabase;
+
+    async function routeAfterSignIn() {
+      const { data, error } = await client
+        .from("families")
+        .select("onboarding_completed_at")
+        .single();
+
+      if (error === null && data.onboarding_completed_at !== null) {
+        markOnboardingComplete();
+        router.replace(safeNextPath(nextPath));
         return;
       }
 
+      markOnboardingIncomplete();
       router.replace("/onboarding");
     }
 
-    void supabase.auth.getSession().then(({ data }) => {
+    void client.auth.getSession().then(({ data }) => {
       if (data.session === null) {
         return;
       }
 
       markAuthenticated(data.session.expires_at);
       setLoginState("redirecting");
-      routeAfterSignIn(data.session.user.id);
+      void routeAfterSignIn();
     });
 
     const {
       data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = client.auth.onAuthStateChange((_event, session) => {
       if (session === null) {
         return;
       }
 
       markAuthenticated(session.expires_at);
       setLoginState("redirecting");
-      routeAfterSignIn(session.user.id);
+      void routeAfterSignIn();
     });
 
     return () => {

@@ -37,13 +37,12 @@ export function markAuthenticated(expiresAt?: number) {
   setCookie(authCookieName, "1", maxAge);
 }
 
-export function markOnboardingComplete(userId: string) {
-  localStorage.setItem(`wonderloop:onboarding:${userId}`, "complete");
+export function markOnboardingComplete() {
   setCookie(onboardingCookieName, "complete", oneYearSeconds);
 }
 
-export function hasCompletedOnboarding(userId: string): boolean {
-  return localStorage.getItem(`wonderloop:onboarding:${userId}`) === "complete";
+export function markOnboardingIncomplete() {
+  expireCookie(onboardingCookieName);
 }
 
 export function clearAuthCookies() {

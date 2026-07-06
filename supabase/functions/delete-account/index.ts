@@ -44,18 +44,19 @@ Deno.serve(async (request) => {
     global: { headers: { Authorization: authorization } }
   });
 
-  const { data: userId, error: cascadeError } = await userClient.rpc(
-    "delete_family_cascade"
-  );
+  const {
+    data: { user },
+    error: userError
+  } = await userClient.auth.getUser();
 
-  if (cascadeError !== null || typeof userId !== "string") {
-    return jsonResponse({ error: "delete_family_failed" }, 400);
+  if (userError !== null || user === null) {
+    return jsonResponse({ error: "not_authenticated" }, 401);
   }
 
   const adminClient = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false }
   });
-  const { error: deleteUserError } = await adminClient.auth.admin.deleteUser(userId);
+  const { error: deleteUserError } = await adminClient.auth.admin.deleteUser(user.id);
 
   if (deleteUserError !== null) {
     return jsonResponse({ error: "delete_user_failed" }, 500);

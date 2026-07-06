@@ -19,7 +19,7 @@ type LanguageMode = Database["public"]["Enums"]["language_mode"];
 type ChildProfile = Database["public"]["Tables"]["child_profiles"]["Row"];
 type FamilySettings = Pick<
   Database["public"]["Tables"]["families"]["Row"],
-  "id" | "language_pref" | "timezone"
+  "id" | "language_pref" | "onboarding_completed_at" | "timezone"
 >;
 type OnboardingStep = "language" | "children" | "timezone";
 
@@ -36,7 +36,6 @@ export function OnboardingFlow() {
   const [step, setStep] = useState<OnboardingStep>("language");
   const [family, setFamily] = useState<FamilySettings | null>(null);
   const [children, setChildren] = useState<ChildProfile[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
   const [languagePref, setLanguagePref] = useState<LanguageMode>("bilingual");
   const [timezone, setTimezone] = useState("America/Los_Angeles");
   const [childNickname, setChildNickname] = useState("");
@@ -69,11 +68,10 @@ export function OnboardingFlow() {
       }
 
       markAuthenticated(data.session.expires_at);
-      setUserId(data.session.user.id);
 
       const { data: familyRow, error: familyError } = await supabase
         .from("families")
-        .select("id, language_pref, timezone")
+        .select("id, language_pref, onboarding_completed_at, timezone")
         .single();
 
       if (familyError !== null) {
@@ -84,6 +82,12 @@ export function OnboardingFlow() {
       setFamily(familyRow);
       setLanguagePref(familyRow.language_pref);
       setTimezone(familyRow.timezone);
+
+      if (familyRow.onboarding_completed_at !== null) {
+        markOnboardingComplete();
+        router.replace("/today");
+        return;
+      }
 
       const { data: childRows, error: childrenError } = await supabase
         .from("child_profiles")
@@ -159,14 +163,17 @@ export function OnboardingFlow() {
 
   async function saveTimezone(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (supabase === null || family === null || userId === null) {
+    if (supabase === null || family === null) {
       setStatusKey("somethingWentWrong");
       return;
     }
 
     const { error } = await supabase
       .from("families")
-      .update({ timezone: timezone.trim() })
+      .update({
+        onboarding_completed_at: new Date().toISOString(),
+        timezone: timezone.trim()
+      })
       .eq("id", family.id);
 
     if (error !== null) {
@@ -174,7 +181,7 @@ export function OnboardingFlow() {
       return;
     }
 
-    markOnboardingComplete(userId);
+    markOnboardingComplete();
     router.replace("/today");
   }
 

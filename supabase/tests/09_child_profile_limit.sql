@@ -1,6 +1,6 @@
 begin;
 
-select plan(3);
+select plan(4);
 
 \ir ./helpers/rls_helpers.inc
 
@@ -31,9 +31,23 @@ select lives_ok(
 select throws_ok(
   $$insert into public.child_profiles (family_id, nickname, age_band)
       values (tests.family_a(), 'Kid Five', '5-8')$$,
-  '42501',
+  '23514',
   null,
-  'fifth child profile insert is rejected by RLS'
+  'fifth child profile insert is rejected by the database limit trigger'
+);
+
+select throws_ok(
+  $$delete from public.child_profiles where family_id = tests.family_a();
+    insert into public.child_profiles (family_id, nickname, age_band)
+    values
+      (tests.family_a(), 'Bulk One', '5-6'),
+      (tests.family_a(), 'Bulk Two', '6-8'),
+      (tests.family_a(), 'Bulk Three', '5-8'),
+      (tests.family_a(), 'Bulk Four', '5-8'),
+      (tests.family_a(), 'Bulk Five', '5-8')$$,
+  '23514',
+  null,
+  'bulk insert cannot bypass the four-child limit'
 );
 
 reset role;
