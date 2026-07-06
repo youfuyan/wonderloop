@@ -4,10 +4,415 @@
 
 :root {
   color-scheme: light;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: #f7f3ec;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #f8fafc;
-  color: #0f172a;
+  background: #f7f3ec;
+  color: #17221f;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.hero {
+  position: relative;
+  min-height: min(720px, 92vh);
+  overflow: hidden;
+  background: #253b33;
+}
+
+.heroImage,
+.heroShade {
+  position: absolute;
+  inset: 0;
+}
+
+.heroImage {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.heroShade {
+  background:
+    linear-gradient(90deg, rgba(11, 24, 20, 0.78), rgba(11, 24, 20, 0.18) 56%),
+    linear-gradient(0deg, rgba(11, 24, 20, 0.18), rgba(11, 24, 20, 0));
+}
+
+.topbar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px clamp(20px, 4vw, 56px);
+}
+
+.brand {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+.languageSwitch {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.languageSwitch button {
+  min-width: 52px;
+  border: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.36);
+  background: transparent;
+  color: #ffffff;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.languageSwitch button:first-child {
+  border-left: 0;
+}
+
+.languageSwitch button[aria-pressed="true"] {
+  background: #ffffff;
+  color: #183229;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: min(920px, calc(100% - 40px));
+  padding: min(18vh, 132px) 0 92px clamp(20px, 6vw, 80px);
+  color: #ffffff;
+}
+
+.heroContent h1 {
+  margin: 0 0 22px;
+  font-size: clamp(56px, 9vw, 108px);
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: 0;
+}
+
+.heroCopy {
+  max-width: 780px;
+}
+
+.heroCopy p {
+  margin: 0;
+  font-size: clamp(23px, 4vw, 42px);
+  font-weight: 700;
+  line-height: 1.14;
+}
+
+.section {
+  padding: 72px 0;
+}
+
+.sectionInner {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.loopBand {
+  background: #fffaf2;
+}
+
+.samplesBand {
+  background: #e9f3ee;
+}
+
+.differenceBand {
+  background: #fffdf8;
+}
+
+.waitlistBand {
+  background: #20392f;
+  color: #ffffff;
+}
+
+.sectionHeading {
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.sectionHeading h2 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.copyPair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.loopList {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loopList li {
+  display: grid;
+  min-height: 112px;
+  align-content: center;
+  gap: 8px;
+  border: 1px solid #d7d0c0;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 18px;
+  color: #20392f;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.18;
+}
+
+.sampleGrid,
+.differenceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.sampleCard,
+.differenceItem,
+.waitlistForm {
+  border: 1px solid rgba(32, 57, 47, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.sampleCard {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+}
+
+.sampleMeta p {
+  margin: 0 0 12px;
+  color: #487267;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.sampleTitle h3,
+.differenceItem h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: 0;
+}
+
+audio {
+  width: 100%;
+}
+
+.differenceGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.differenceItem {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+}
+
+.differenceItem .copyPair {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.differenceItem p,
+.waitlistCopy p,
+.footer p {
+  margin: 0;
+  color: #465a53;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.waitlistBand .sectionHeading {
+  margin-bottom: 18px;
+}
+
+.waitlistCopy p,
+.footer p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.waitlistLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.7fr);
+  gap: 36px;
+  align-items: start;
+}
+
+.waitlistForm {
+  display: grid;
+  gap: 16px;
+  background: #fffaf2;
+  padding: 22px;
+  color: #17221f;
+}
+
+.waitlistForm label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.waitlistForm input,
+.waitlistForm select {
+  min-height: 48px;
+  width: 100%;
+  border: 1px solid #cfc7b6;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0 12px;
+  color: #17221f;
+}
+
+.waitlistForm button {
+  min-height: 50px;
+  border: 0;
+  border-radius: 8px;
+  background: #ef7b57;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.waitlistForm button:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.formMessage {
+  margin: 0;
+  color: #20392f;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.footer {
+  background: #17221f;
+  color: #ffffff;
+  padding: 28px 0;
+}
+
+.footerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer a {
+  color: #ffffff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+[data-language="en"] [data-locale="zh"],
+[data-language="zh"] [data-locale="en"] {
+  display: none;
+}
+
+[data-language="en"] .copyPair,
+[data-language="zh"] .copyPair {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 920px) {
+  .hero {
+    min-height: 88vh;
+  }
+
+  .heroShade {
+    background: rgba(11, 24, 20, 0.5);
+  }
+
+  .heroContent {
+    width: calc(100% - 40px);
+    padding: min(14vh, 110px) 20px 72px;
+  }
+
+  .copyPair,
+  .sampleGrid,
+  .differenceGrid,
+  .waitlistLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .loopList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footerInner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 560px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .section {
+    padding: 52px 0;
+  }
+
+  .loopList {
+    grid-template-columns: 1fr;
+  }
+
+  .loopList li {
+    min-height: 78px;
+  }
+
+  .sampleCard {
+    padding: 18px;
+  }
 }
