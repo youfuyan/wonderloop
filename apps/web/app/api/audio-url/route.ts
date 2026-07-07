@@ -58,6 +58,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_episode_payload" }, { status: 500 });
   }
 
+  if (episode.access === "story_only") {
+    return NextResponse.json({ error: "paywall_required" }, { status: 403 });
+  }
+
   const plan = derivePlayerPlan(episode, body.languageMode);
   const serviceClient = createWonderLoopClient(env.url, env.serviceRoleKey, {
     auth: { persistSession: false }
