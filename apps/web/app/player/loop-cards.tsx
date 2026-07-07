@@ -5,7 +5,8 @@ import type {
   EpisodeContent,
   EpisodeSegment,
   PlayerLanguageMode,
-  PlayerSegmentType
+  PlayerSegmentType,
+  RecallPlan
 } from "@wonderloop/core";
 
 type LoopCardsProps = {
@@ -26,6 +27,66 @@ type BilingualText = {
   en: string;
   zh: string;
 };
+
+export function RecallCard({
+  languageMode,
+  plan,
+  onAnswered,
+  onContinue
+}: {
+  languageMode: PlayerLanguageMode;
+  plan: RecallPlan;
+  onAnswered: () => void;
+  onContinue: () => void;
+}) {
+  const [answered, setAnswered] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+
+  function answerRecall() {
+    if (!answered) {
+      setAnswered(true);
+      onAnswered();
+    }
+  }
+
+  return (
+    <section className="loopCard recallCard" aria-live="polite">
+      <CardText text={plan.recallQuestion} languageMode={languageMode} />
+      <div className="loopCardActions">
+        <button
+          onClick={() => {
+            answerRecall();
+            onContinue();
+          }}
+          type="button"
+        >
+          Remembered / 记得！
+        </button>
+        <button
+          className="secondaryButton"
+          onClick={() => {
+            answerRecall();
+            setShowHint(true);
+          }}
+          type="button"
+        >
+          A Bit Fuzzy / 有点忘了
+        </button>
+      </div>
+      {showHint ? (
+        <div className="loopCardNote">
+          <CardText
+            text={plan.recallQuestion.answer_hint}
+            languageMode={languageMode}
+          />
+          <button onClick={onContinue} type="button">
+            Continue / 继续
+          </button>
+        </div>
+      ) : null}
+    </section>
+  );
+}
 
 export function LoopCards({
   bridge,

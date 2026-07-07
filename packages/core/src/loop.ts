@@ -23,6 +23,7 @@ export type DailySession = {
   answered_think: boolean;
   taught_back: boolean;
   asked_new_question: boolean;
+  recall_answered: boolean;
 };
 
 export type LoopState = LoopSessionProgress & {
@@ -107,7 +108,7 @@ export function restoreLoopStateFromSession(session: Partial<DailySession>): Loo
     answeredThink,
     taughtBack,
     askedNewQuestion,
-    recallAnswered: false
+    recallAnswered: session.recall_answered ?? false
   };
 
   if (isLoopComplete(restoredState)) {

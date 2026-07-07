@@ -10,11 +10,26 @@ type DailySessionUpdate = Pick<
   | "asked_new_question"
   | "listened"
   | "predict_choice"
+  | "recall_answered"
   | "taught_back"
 >;
 type SessionUpdatePayload = Partial<DailySessionUpdate>;
 type SessionStorageLike = Pick<Storage, "getItem" | "removeItem" | "setItem">;
 type WonderLoopSupabaseClient = SupabaseClient<Database>;
+
+export type RecentRecallPlan = {
+  episodeId: string;
+  recallQuestion: {
+    answer_hint: {
+      en: string;
+      zh: string;
+    };
+    en: string;
+    zh: string;
+  };
+  sessionDate: string;
+  sessionId: string;
+};
 
 export type GetOrCreateSessionParams = {
   childProfileId?: string | null;
@@ -31,6 +46,51 @@ export type QueuedSessionUpdate = {
 
 export const sessionRetryQueueKey = "wonderloop.sessionRetryQueue.v1";
 export const sessionUniqueConflictTarget = "family_id,episode_id";
+
+export async function getRecentRecallPlan(
+  client: WonderLoopSupabaseClient,
+  today = currentDateString()
+): Promise<RecentRecallPlan | null> {
+  const { data, error } = await client
+    .from("daily_sessions")
+    .select("id, episode_id, session_date, loop_complete, recall_answered")
+    .eq("loop_complete", true)
+    .eq("recall_answered", false)
+    .gte("session_date", shiftDateString(today, -3))
+    .lt("session_date", today)
+    .order("session_date", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error !== null) {
+    throw new Error(error.message);
+  }
+
+  if (data === null) {
+    return null;
+  }
+
+  const { data: episodeData, error: episodeError } = await client.rpc(
+    "get_full_episode",
+    { p_episode_id: data.episode_id }
+  );
+
+  if (episodeError !== null) {
+    throw new Error(episodeError.message);
+  }
+
+  const recallQuestion = parseRecallQuestion(episodeData);
+  if (recallQuestion === null) {
+    return null;
+  }
+
+  return {
+    episodeId: data.episode_id,
+    recallQuestion,
+    sessionDate: data.session_date,
+    sessionId: data.id
+  };
+}
 
 export async function getOrCreateSession(
   client: WonderLoopSupabaseClient,
@@ -140,6 +200,10 @@ export function buildDedupedSessionUpdate(
 
   if (partial.asked_new_question === true && !current.asked_new_question) {
     update.asked_new_question = true;
+  }
+
+  if (partial.recall_answered === true && !current.recall_answered) {
+    update.recall_answered = true;
   }
 
   if (
@@ -279,6 +343,47 @@ function isQueuedSessionUpdate(value: unknown): value is QueuedSessionUpdate {
     typeof value.queuedAt === "string" &&
     typeof value.attempts === "number"
   );
+}
+
+function parseRecallQuestion(
+  value: unknown
+): RecentRecallPlan["recallQuestion"] | null {
+  if (!isRecord(value) || !isRecord(value.content)) {
+    return null;
+  }
+
+  const question = value.content.recall_question;
+  if (!isRecord(question) || !isRecord(question.answer_hint)) {
+    return null;
+  }
+
+  if (
+    typeof question.en !== "string" ||
+    typeof question.zh !== "string" ||
+    typeof question.answer_hint.en !== "string" ||
+    typeof question.answer_hint.zh !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    answer_hint: {
+      en: question.answer_hint.en,
+      zh: question.answer_hint.zh
+    },
+    en: question.en,
+    zh: question.zh
+  };
+}
+
+function currentDateString(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function shiftDateString(dateString: string, deltaDays: number): string {
+  const date = new Date(`${dateString}T00:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + deltaDays);
+  return date.toISOString().slice(0, 10);
 }
 
 function parseJson(value: string): unknown {

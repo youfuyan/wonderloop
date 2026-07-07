@@ -5,6 +5,7 @@ import {
   buildSessionUpsert,
   enqueueSessionUpdate,
   flushQueuedSessionUpdates,
+  getRecentRecallPlan,
   getOrCreateSession,
   readSessionRetryQueue,
   sessionRetryQueueKey,
@@ -33,6 +34,12 @@ const session = {
   taught_back: false,
   updated_at: "2026-07-06T00:00:00Z"
 } satisfies DailySessionRow;
+
+const recallQuestion = {
+  answer_hint: { en: "They make honey.", zh: "它们会酿蜜。" },
+  en: "What did bees make?",
+  zh: "蜜蜂会做什么？"
+};
 
 describe("session insert payload", () => {
   it("uses the family and episode unique constraint", () => {
@@ -94,6 +101,32 @@ describe("session insert payload", () => {
   });
 });
 
+describe("getRecentRecallPlan", () => {
+  it("loads the latest eligible completed session and extracts recall question", async () => {
+    const builder = new RecallQueryBuilder();
+    const rpc = vi.fn().mockResolvedValue({
+      data: { content: { recall_question: recallQuestion } },
+      error: null
+    });
+    const client = {
+      from: vi.fn(() => builder),
+      rpc
+    } as unknown as Parameters<typeof getRecentRecallPlan>[0];
+
+    await expect(getRecentRecallPlan(client, "2026-07-07")).resolves.toEqual({
+      episodeId: "episode-1",
+      recallQuestion,
+      sessionDate: "2026-07-06",
+      sessionId: "previous-session"
+    });
+    expect(builder.gte).toHaveBeenCalledWith("session_date", "2026-07-04");
+    expect(builder.lt).toHaveBeenCalledWith("session_date", "2026-07-07");
+    expect(rpc).toHaveBeenCalledWith("get_full_episode", {
+      p_episode_id: "episode-1"
+    });
+  });
+});
+
 describe("buildDedupedSessionUpdate", () => {
   it("does not rewrite fields already set to true", () => {
     expect(
@@ -119,6 +152,18 @@ describe("buildDedupedSessionUpdate", () => {
         { predict_choice: "b" }
       )
     ).toEqual({ predict_choice: "b" });
+  });
+
+  it("marks recall answered only on the target session once", () => {
+    expect(buildDedupedSessionUpdate(session, { recall_answered: true })).toEqual({
+      recall_answered: true
+    });
+    expect(
+      buildDedupedSessionUpdate(
+        { ...session, recall_answered: true },
+        { recall_answered: true }
+      )
+    ).toEqual({});
   });
 });
 
@@ -197,4 +242,23 @@ function createMemoryStorage(): Storage {
       items.set(key, value);
     }
   };
+}
+
+class RecallQueryBuilder {
+  select = vi.fn(() => this);
+  eq = vi.fn(() => this);
+  gte = vi.fn(() => this);
+  lt = vi.fn(() => this);
+  order = vi.fn(() => this);
+  limit = vi.fn(() => this);
+  maybeSingle = vi.fn().mockResolvedValue({
+    data: {
+      episode_id: "episode-1",
+      id: "previous-session",
+      loop_complete: true,
+      recall_answered: false,
+      session_date: "2026-07-06"
+    },
+    error: null
+  });
 }

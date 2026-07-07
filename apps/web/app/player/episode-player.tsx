@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   advance,
+  deriveRecallSessionUpdate,
   deriveSessionUpdate,
   isLoopComplete,
   restoreLoopStateFromSession,
@@ -17,12 +18,13 @@ import type {
   PlayerLanguageMode,
   PlayerPlan,
   PlayerSegment,
+  RecallPlan,
   SegmentBoundary
 } from "@wonderloop/core";
 import { flushSessionRetryQueue, updateSession } from "@wonderloop/api-client";
 
 import { getBrowserSupabase } from "../auth/session";
-import { LoopCards, segmentForCard } from "./loop-cards";
+import { LoopCards, RecallCard, segmentForCard } from "./loop-cards";
 import {
   clearSessionProgress,
   loadSessionProgress,
@@ -37,8 +39,10 @@ type EpisodePlayerProps = {
   initialSession?: Partial<DailySession>;
   languageMode: PlayerLanguageMode;
   onNewQuestionSubmitted?: (questionText: string) => void;
+  onRecallAnswered?: (plan: RecallPlan) => void;
   onSegmentBoundary?: (boundary: SegmentBoundary) => void;
   onSessionUpdate?: (update: Partial<DailySession>, event: LoopEvent) => void;
+  recallPlan?: RecallPlan | null;
   sessionId?: string;
 };
 
@@ -70,8 +74,10 @@ export function EpisodePlayer({
   initialSession,
   languageMode,
   onNewQuestionSubmitted,
+  onRecallAnswered,
   onSessionUpdate,
   onSegmentBoundary,
+  recallPlan,
   sessionId
 }: EpisodePlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -83,6 +89,9 @@ export function EpisodePlayer({
   const pendingCacheSeekRef = useRef<number | null>(null);
   const pendingResumeAtRef = useRef<number | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [activeRecallPlan, setActiveRecallPlan] = useState<RecallPlan | null>(
+    recallPlan ?? null
+  );
   const [cachedProgress, setCachedProgress] = useState<CachedSessionProgress | null>(
     null
   );
@@ -162,6 +171,10 @@ export function EpisodePlayer({
   }, [episodeId, initialSession]);
 
   useEffect(() => {
+    setActiveRecallPlan(recallPlan ?? null);
+  }, [episodeId, recallPlan]);
+
+  useEffect(() => {
     const progress = loadSessionProgress(episodeId);
     setCachedProgress(
       progress === null || progress.loopState.status === "completed" ? null : progress
@@ -218,6 +231,10 @@ export function EpisodePlayer({
   function handleTimeUpdate() {
     const audio = audioRef.current;
     if (audio === null || plan === null) {
+      return;
+    }
+
+    if (activeRecallPlan !== null) {
       return;
     }
 
@@ -382,6 +399,21 @@ export function EpisodePlayer({
     }
   }
 
+  function answerRecall() {
+    if (activeRecallPlan === null) {
+      return;
+    }
+
+    const recallUpdate = deriveRecallSessionUpdate(activeRecallPlan);
+    void updateSession(
+      getBrowserSupabase(),
+      recallUpdate.sessionId,
+      recallUpdate.update
+    ).catch(() => undefined);
+    onRecallAnswered?.(activeRecallPlan);
+    setLoopState((state) => advance(state, { type: "RECALL_ANSWERED" }));
+  }
+
   function applyLoopEvent(event: LoopEvent): LoopState {
     const update = deriveSessionUpdate(loopState, event);
     if (hasSessionUpdate(update)) {
@@ -419,6 +451,17 @@ export function EpisodePlayer({
 
   return (
     <section className="episodePlayer" aria-label="Episode player">
+      {activeRecallPlan !== null ? (
+        <RecallCard
+          languageMode={languageMode}
+          plan={activeRecallPlan}
+          onAnswered={answerRecall}
+          onContinue={() => {
+            setActiveRecallPlan(null);
+          }}
+        />
+      ) : null}
+
       {cachedProgress !== null ? (
         <div className="resumePrompt" role="status">
           <span>{resumePromptText(cachedProgress)}</span>
@@ -501,7 +544,7 @@ export function EpisodePlayer({
       <div className="playerControls">
         <button
           aria-label={isPlaying ? "Pause / 暂停" : "Play / 播放"}
-          disabled={status !== "ready"}
+          disabled={status !== "ready" || activeRecallPlan !== null}
           onClick={() => void togglePlayback()}
           type="button"
         >
@@ -509,7 +552,7 @@ export function EpisodePlayer({
         </button>
         <button
           aria-label="Back 10 seconds / 后退 10 秒"
-          disabled={status !== "ready"}
+          disabled={status !== "ready" || activeRecallPlan !== null}
           onClick={() => {
             seekBy(-10);
           }}
@@ -519,7 +562,7 @@ export function EpisodePlayer({
         </button>
         <button
           aria-label="Forward 10 seconds / 前进 10 秒"
-          disabled={status !== "ready"}
+          disabled={status !== "ready" || activeRecallPlan !== null}
           onClick={() => {
             seekBy(10);
           }}
