@@ -1,8 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { shouldPauseAt } from "@wonderloop/core";
+import {
+  advance,
+  deriveSessionUpdate,
+  isLoopComplete,
+  restoreLoopStateFromSession,
+  shouldPauseAt
+} from "@wonderloop/core";
 import type {
+  DailySession,
+  EpisodeContent,
+  EpisodeSegment,
+  LoopEvent,
+  LoopState,
   PlayerLanguageMode,
   PlayerPlan,
   PlayerSegment,
@@ -10,11 +21,16 @@ import type {
 } from "@wonderloop/core";
 
 import { getBrowserSupabase } from "../auth/session";
+import { LoopCards, segmentForCard } from "./loop-cards";
 
 type EpisodePlayerProps = {
   episodeId: string;
+  episodeContent?: Pick<EpisodeContent, "bilingual_bridge" | "segments">;
+  initialSession?: Partial<DailySession>;
   languageMode: PlayerLanguageMode;
+  onNewQuestionSubmitted?: (questionText: string) => void;
   onSegmentBoundary?: (boundary: SegmentBoundary) => void;
+  onSessionUpdate?: (update: Partial<DailySession>, event: LoopEvent) => void;
 };
 
 type AudioUrlResponse = {
@@ -23,6 +39,12 @@ type AudioUrlResponse = {
 };
 
 type PlayerStatus = "idle" | "loading" | "ready" | "error";
+type LoopCardStatus =
+  | "predict_paused"
+  | "think_paused"
+  | "teach_back_paused"
+  | "new_question_paused"
+  | "completed";
 
 const playerSegmentTypes = [
   "hook",
@@ -35,7 +57,11 @@ const playerSegmentTypes = [
 
 export function EpisodePlayer({
   episodeId,
+  episodeContent,
+  initialSession,
   languageMode,
+  onNewQuestionSubmitted,
+  onSessionUpdate,
   onSegmentBoundary
 }: EpisodePlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -44,8 +70,12 @@ export function EpisodePlayer({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [loopState, setLoopState] = useState<LoopState>(() =>
+    restoreLoopStateFromSession(initialSession ?? {})
+  );
   const [plan, setPlan] = useState<PlayerPlan | null>(null);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [segmentCard, setSegmentCard] = useState<EpisodeSegment | null>(null);
   const [status, setStatus] = useState<PlayerStatus>("idle");
 
   useEffect(() => {
@@ -109,6 +139,11 @@ export function EpisodePlayer({
   }, [episodeId, languageMode]);
 
   useEffect(() => {
+    setLoopState(restoreLoopStateFromSession(initialSession ?? {}));
+    setSegmentCard(null);
+  }, [episodeId, initialSession]);
+
+  useEffect(() => {
     const audio = audioRef.current;
     if (audio !== null) {
       audio.playbackRate = playbackRate;
@@ -146,7 +181,35 @@ export function EpisodePlayer({
     audio.currentTime = boundary.at;
     setCurrentTime(boundary.at);
     setIsPlaying(false);
+    if (episodeContent !== undefined) {
+      const loopEvent: LoopEvent = {
+        type: "SEGMENT_END",
+        segmentType: boundary.segmentType
+      };
+      const nextState = applyLoopEvent(loopEvent);
+      setSegmentCard(
+        nextState.status === "completed"
+          ? null
+          : segmentForCard(episodeContent.segments, boundary.segmentType)
+      );
+    }
     onSegmentBoundary?.(boundary);
+  }
+
+  async function startPlayback() {
+    const audio = audioRef.current;
+    if (audio === null || plan === null) {
+      return;
+    }
+
+    if (pendingResumeAtRef.current !== null) {
+      audio.currentTime = pendingResumeAtRef.current;
+      pendingResumeAtRef.current = null;
+    }
+
+    audio.playbackRate = playbackRate;
+    await audio.play();
+    setIsPlaying(true);
   }
 
   async function togglePlayback() {
@@ -161,14 +224,11 @@ export function EpisodePlayer({
       return;
     }
 
-    if (pendingResumeAtRef.current !== null) {
-      audio.currentTime = pendingResumeAtRef.current;
-      pendingResumeAtRef.current = null;
+    if (episodeContent !== undefined && loopState.status === "idle") {
+      applyLoopEvent({ type: "RESUME" });
     }
 
-    audio.playbackRate = playbackRate;
-    await audio.play();
-    setIsPlaying(true);
+    await startPlayback();
   }
 
   function seekBy(deltaSeconds: number) {
@@ -182,11 +242,70 @@ export function EpisodePlayer({
     setCurrentTime(nextTime);
   }
 
+  function handleCardAnswer(payload?: {
+    predictChoice?: string;
+    questionText?: string;
+  }) {
+    const loopEvent: LoopEvent =
+      payload?.predictChoice === undefined
+        ? { type: "ANSWER_SUBMITTED" }
+        : {
+            type: "ANSWER_SUBMITTED",
+            predictChoice: payload.predictChoice
+          };
+    const nextState = applyLoopEvent(loopEvent);
+
+    if (
+      loopState.status === "new_question_paused" &&
+      payload?.questionText !== undefined &&
+      payload.questionText.length > 0
+    ) {
+      onNewQuestionSubmitted?.(payload.questionText);
+    }
+
+    setSegmentCard(null);
+    if (nextState.status !== "completed") {
+      void startPlayback();
+    }
+  }
+
+  function handleCardSkip() {
+    const nextState = applyLoopEvent({ type: "SKIP" });
+
+    setSegmentCard(null);
+    if (nextState.status !== "completed") {
+      void startPlayback();
+    }
+  }
+
+  function applyLoopEvent(event: LoopEvent): LoopState {
+    const update = deriveSessionUpdate(loopState, event);
+    if (hasSessionUpdate(update)) {
+      onSessionUpdate?.(update, event);
+    }
+
+    const nextState = advance(loopState, event);
+    setLoopState(nextState);
+    return nextState;
+  }
+
   const progressPercent =
     plan === null ? 0 : clamp((currentTime / plan.durationSec) * 100, 0, 100);
+  const cardStatus = getLoopCardStatus(loopState, episodeContent !== undefined);
 
   return (
     <section className="episodePlayer" aria-label="Episode player">
+      {episodeContent !== undefined && cardStatus !== null ? (
+        <LoopCards
+          bridge={episodeContent.bilingual_bridge}
+          languageMode={languageMode}
+          segment={segmentCard}
+          status={cardStatus}
+          onAnswer={handleCardAnswer}
+          onSkip={handleCardSkip}
+        />
+      ) : null}
+
       {audioUrl !== null ? (
         <audio
           onEnded={() => {
@@ -335,6 +454,34 @@ function isPlayerSegmentType(value: unknown): value is PlayerSegment["type"] {
 
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
+}
+
+function hasSessionUpdate(update: Partial<DailySession>): boolean {
+  return Object.keys(update).length > 0;
+}
+
+function getLoopCardStatus(
+  loopState: LoopState,
+  hasEpisodeContent: boolean
+): LoopCardStatus | null {
+  if (!hasEpisodeContent) {
+    return null;
+  }
+
+  if (
+    loopState.status === "predict_paused" ||
+    loopState.status === "think_paused" ||
+    loopState.status === "teach_back_paused" ||
+    loopState.status === "new_question_paused"
+  ) {
+    return loopState.status;
+  }
+
+  if (loopState.status === "completed" && isLoopComplete(loopState)) {
+    return "completed";
+  }
+
+  return null;
 }
 
 function clamp(value: number, min: number, max: number): number {

@@ -577,6 +577,152 @@ audio {
   padding: 18px;
 }
 
+.loopCard {
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(32, 57, 47, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px;
+  color: #17221f;
+}
+
+.bilingualLines {
+  display: grid;
+  gap: 4px;
+}
+
+.predictOptions {
+  display: grid;
+  gap: 10px;
+}
+
+.predictOptions button,
+.loopCardActions button,
+.loopCardNote button {
+  min-height: 44px;
+  border: 1px solid rgba(32, 57, 47, 0.18);
+  border-radius: 8px;
+  background: #fffdf8;
+  color: #17221f;
+  font-weight: 800;
+  text-align: left;
+}
+
+.predictOptions button {
+  padding: 12px;
+}
+
+.predictOptions .selectedOption {
+  border-color: #20392f;
+  background: #e7f0ec;
+}
+
+.loopCardNote {
+  display: grid;
+  gap: 10px;
+  border-left: 4px solid #efc46f;
+  padding-left: 12px;
+}
+
+.loopCardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.loopCardActions button,
+.loopCardNote button {
+  padding: 0 14px;
+  background: #20392f;
+  color: #ffffff;
+  text-align: center;
+}
+
+.loopCardActions .secondaryButton {
+  background: #ffffff;
+  color: #20392f;
+}
+
+.answerGuidance {
+  border: 1px solid rgba(32, 57, 47, 0.14);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.answerGuidance summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.countdownTrack {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #d7d0c0;
+}
+
+.countdownTrack span {
+  display: block;
+  height: 100%;
+  background: #ef9c7f;
+  transition: width 0.3s ease;
+}
+
+.countdownText {
+  margin: 0;
+  color: #465a53;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.parentQuestionField {
+  display: grid;
+  gap: 8px;
+  color: #465a53;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.parentQuestionField textarea {
+  min-height: 88px;
+  resize: vertical;
+  border: 1px solid rgba(32, 57, 47, 0.18);
+  border-radius: 8px;
+  padding: 10px;
+  color: #17221f;
+  font: inherit;
+}
+
+.completionCard {
+  border-color: rgba(142, 185, 168, 0.72);
+  background: #f5fbf8;
+}
+
+.completionCard p {
+  margin: 0;
+}
+
+.bilingualBridgeCard {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bridgeWord {
+  display: grid;
+  gap: 2px;
+  border: 1px solid rgba(32, 57, 47, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 10px;
+}
+
+.bridgeWord span {
+  color: #465a53;
+  font-size: 13px;
+}
+
 .playerTimeline {
   position: relative;
   height: 16px;
@@ -670,5 +816,9 @@ audio {
 
   .playerRate {
     grid-column: 1 / -1;
+  }
+
+  .bilingualBridgeCard {
+    grid-template-columns: 1fr;
   }
 }
