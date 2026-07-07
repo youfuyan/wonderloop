@@ -411,7 +411,6 @@ export function EpisodePlayer({
       recallUpdate.update
     ).catch(() => undefined);
     onRecallAnswered?.(activeRecallPlan);
-    setLoopState((state) => advance(state, { type: "RECALL_ANSWERED" }));
   }
 
   function applyLoopEvent(event: LoopEvent): LoopState {

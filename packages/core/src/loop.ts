@@ -29,15 +29,13 @@ export type DailySession = {
 export type LoopState = LoopSessionProgress & {
   status: LoopStatus;
   predictChoice: string | null;
-  recallAnswered: boolean;
 };
 
 export type LoopEvent =
   | { type: "RESUME" }
   | { type: "SEGMENT_END"; segmentType?: PlayerSegmentType }
   | { type: "ANSWER_SUBMITTED"; predictChoice?: string }
-  | { type: "SKIP" }
-  | { type: "RECALL_ANSWERED" };
+  | { type: "SKIP" };
 
 export const initialLoopState: LoopState = {
   status: "idle",
@@ -45,8 +43,7 @@ export const initialLoopState: LoopState = {
   predictChoice: null,
   answeredThink: false,
   taughtBack: false,
-  askedNewQuestion: false,
-  recallAnswered: false
+  askedNewQuestion: false
 };
 
 export function isLoopComplete(session: LoopSessionProgress): boolean {
@@ -107,8 +104,7 @@ export function restoreLoopStateFromSession(session: Partial<DailySession>): Loo
     predictChoice: session.predict_choice ?? null,
     answeredThink,
     taughtBack,
-    askedNewQuestion,
-    recallAnswered: session.recall_answered ?? false
+    askedNewQuestion
   };
 
   if (isLoopComplete(restoredState)) {
@@ -135,10 +131,6 @@ export function restoreLoopStateFromSession(session: Partial<DailySession>): Loo
 }
 
 function applyEvent(state: LoopState, event: LoopEvent): LoopState {
-  if (event.type === "RECALL_ANSWERED") {
-    return { ...state, recallAnswered: true };
-  }
-
   if (state.status === "completed") {
     return state;
   }

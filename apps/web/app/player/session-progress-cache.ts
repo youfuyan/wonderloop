@@ -85,7 +85,6 @@ function restoreCachedLoopState(value: Record<string, unknown>): LoopState {
     listened: value.listened === true,
     predict_choice:
       typeof value.predictChoice === "string" ? value.predictChoice : null,
-    recall_answered: value.recallAnswered === true,
     taught_back: value.taughtBack === true
   };
   const restored = restoreLoopStateFromSession(session);

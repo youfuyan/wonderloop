@@ -90,13 +90,7 @@ describe("loop state machine", () => {
       { type: "SKIP" },
       "completed"
     ],
-    ["completed is terminal", st("completed", complete), { type: "SKIP" }, "completed"],
-    [
-      "recall keeps step",
-      st("think_paused"),
-      { type: "RECALL_ANSWERED" },
-      "think_paused"
-    ]
+    ["completed is terminal", st("completed", complete), { type: "SKIP" }, "completed"]
   ] satisfies [string, LoopState, LoopEvent, LoopStatus][])(
     "%s",
     (_name, state, event, status) => {
@@ -202,6 +196,14 @@ describe("restoreLoopStateFromSession", () => {
       expect(restoreLoopStateFromSession(session).status).toBe(status);
     }
   );
+
+  it("does not hydrate prior-session recall into today's loop state", () => {
+    expect(
+      restoreLoopStateFromSession({
+        recall_answered: true
+      })
+    ).not.toHaveProperty("recallAnswered");
+  });
 });
 
 function st(

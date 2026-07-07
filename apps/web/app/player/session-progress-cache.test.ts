@@ -42,6 +42,27 @@ describe("session progress cache", () => {
     clearSessionProgress("episode-1", storage);
     expect(loadSessionProgress("episode-1", storage)).toBeNull();
   });
+
+  it("does not restore prior-session recall into today's loop cache", () => {
+    const storage = createMemoryStorage();
+    storage.setItem(
+      "wonderloop.sessionProgress.v1:episode-1",
+      JSON.stringify({
+        currentTime: 12,
+        episodeId: "episode-1",
+        loopState: {
+          ...initialLoopState,
+          recallAnswered: true,
+          status: "idle"
+        },
+        savedAt: "2026-07-07T00:00:00.000Z"
+      })
+    );
+
+    expect(loadSessionProgress("episode-1", storage)?.loopState).not.toHaveProperty(
+      "recallAnswered"
+    );
+  });
 });
 
 function createMemoryStorage(): Storage {
