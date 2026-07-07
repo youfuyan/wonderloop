@@ -177,7 +177,17 @@ export function EpisodePlayer({
       return;
     }
 
-    void flushSessionRetryQueue(getBrowserSupabase()).catch(() => undefined);
+    const supabase = getBrowserSupabase();
+    const flushQueuedUpdates = () => {
+      void flushSessionRetryQueue(supabase).catch(() => undefined);
+    };
+
+    flushQueuedUpdates();
+    window.addEventListener("online", flushQueuedUpdates);
+
+    return () => {
+      window.removeEventListener("online", flushQueuedUpdates);
+    };
   }, [sessionId]);
 
   useEffect(() => {

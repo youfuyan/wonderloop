@@ -30,22 +30,32 @@ export type QueuedSessionUpdate = {
 };
 
 export const sessionRetryQueueKey = "wonderloop.sessionRetryQueue.v1";
-export const sessionUpsertConflictTarget = "family_id,episode_id";
+export const sessionUniqueConflictTarget = "family_id,episode_id";
 
 export async function getOrCreateSession(
   client: WonderLoopSupabaseClient,
   params: GetOrCreateSessionParams
 ): Promise<DailySessionRow> {
+  const existingSession = await getSessionByEpisodeId(client, params.episodeId);
+  if (existingSession !== null) {
+    return existingSession;
+  }
+
   const familyId = await getCurrentFamilyId(client);
   const { data, error } = await client
     .from("daily_sessions")
-    .upsert(buildSessionUpsert(familyId, params), {
-      onConflict: sessionUpsertConflictTarget
-    })
+    .insert(buildSessionUpsert(familyId, params))
     .select("*")
     .single();
 
   if (error !== null) {
+    if (error.code === "23505") {
+      const racedSession = await getSessionByEpisodeId(client, params.episodeId);
+      if (racedSession !== null) {
+        return racedSession;
+      }
+    }
+
     throw new Error(`Unable to get or create daily session: ${error.message}`);
   }
 
@@ -219,6 +229,23 @@ async function getCurrentFamilyId(client: WonderLoopSupabaseClient): Promise<str
   }
 
   return data.id;
+}
+
+async function getSessionByEpisodeId(
+  client: WonderLoopSupabaseClient,
+  episodeId: string
+): Promise<DailySessionRow | null> {
+  const { data, error } = await client
+    .from("daily_sessions")
+    .select("*")
+    .eq("episode_id", episodeId)
+    .maybeSingle();
+
+  if (error !== null) {
+    throw new Error(error.message);
+  }
+
+  return data;
 }
 
 async function getSessionById(

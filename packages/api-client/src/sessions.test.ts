@@ -5,9 +5,10 @@ import {
   buildSessionUpsert,
   enqueueSessionUpdate,
   flushQueuedSessionUpdates,
+  getOrCreateSession,
   readSessionRetryQueue,
   sessionRetryQueueKey,
-  sessionUpsertConflictTarget
+  sessionUniqueConflictTarget
 } from "./sessions";
 import type { QueuedSessionUpdate } from "./sessions";
 import type { Database } from "./database.types";
@@ -33,9 +34,9 @@ const session = {
   updated_at: "2026-07-06T00:00:00Z"
 } satisfies DailySessionRow;
 
-describe("session upsert payload", () => {
+describe("session insert payload", () => {
   it("uses the family and episode unique constraint", () => {
-    expect(sessionUpsertConflictTarget).toBe("family_id,episode_id");
+    expect(sessionUniqueConflictTarget).toBe("family_id,episode_id");
     expect(
       buildSessionUpsert("family-1", {
         childProfileId: "child-1",
@@ -48,6 +49,48 @@ describe("session upsert payload", () => {
       family_id: "family-1",
       language_mode: "bilingual"
     });
+  });
+
+  it("returns an existing session without overwriting child or language fields", async () => {
+    const insert = vi.fn();
+    const maybeSingle = vi.fn<() => Promise<{ data: DailySessionRow; error: null }>>();
+    maybeSingle.mockResolvedValue({
+      data: {
+        ...session,
+        child_profile_id: "child-1",
+        language_mode: "zh"
+      },
+      error: null
+    });
+    const from = vi.fn((table: string) => {
+      if (table === "daily_sessions") {
+        return {
+          insert,
+          select: vi.fn(() => ({
+            eq: vi.fn(() => ({ maybeSingle }))
+          }))
+        };
+      }
+
+      return {
+        select: vi.fn(() => ({
+          single: vi.fn()
+        }))
+      };
+    });
+
+    const existing = await getOrCreateSession(
+      { from } as unknown as Parameters<typeof getOrCreateSession>[0],
+      {
+        episodeId: "episode-1",
+        languageMode: "bilingual"
+      }
+    );
+
+    expect(existing.child_profile_id).toBe("child-1");
+    expect(existing.language_mode).toBe("zh");
+    expect(insert).not.toHaveBeenCalled();
+    expect(from).not.toHaveBeenCalledWith("families");
   });
 });
 
