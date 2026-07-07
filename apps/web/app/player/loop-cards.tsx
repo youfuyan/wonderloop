@@ -41,7 +41,12 @@ export function LoopCards({
 
   if (status === "predict_paused" && segment?.type === "predict") {
     return (
-      <PredictCard languageMode={languageMode} segment={segment} onAnswer={onAnswer} />
+      <PredictCard
+        languageMode={languageMode}
+        segment={segment}
+        onAnswer={onAnswer}
+        onSkip={onSkip}
+      />
     );
   }
 
@@ -84,11 +89,13 @@ export function LoopCards({
 function PredictCard({
   languageMode,
   segment,
-  onAnswer
+  onAnswer,
+  onSkip
 }: {
   languageMode: PlayerLanguageMode;
   segment: Extract<EpisodeSegment, { type: "predict" }>;
   onAnswer: (payload?: { predictChoice?: string }) => void;
+  onSkip: () => void;
 }) {
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
 
@@ -122,6 +129,9 @@ function PredictCard({
           </button>
         </div>
       ) : null}
+      <button className="secondaryButton" onClick={onSkip} type="button">
+        Skip / 跳过
+      </button>
     </section>
   );
 }
@@ -216,6 +226,7 @@ function NewQuestionCard({
   onSkip: () => void;
 }) {
   const [questionText, setQuestionText] = useState("");
+  const trimmedQuestion = questionText.trim();
 
   return (
     <section className="loopCard" aria-live="polite">
@@ -231,8 +242,9 @@ function NewQuestionCard({
       </label>
       <div className="loopCardActions">
         <button
+          disabled={trimmedQuestion.length === 0}
           onClick={() => {
-            onAnswer({ questionText: questionText.trim() });
+            onAnswer({ questionText: trimmedQuestion });
           }}
           type="button"
         >

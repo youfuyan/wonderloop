@@ -246,6 +246,14 @@ export function EpisodePlayer({
     predictChoice?: string;
     questionText?: string;
   }) {
+    if (
+      loopState.status === "new_question_paused" &&
+      (payload?.questionText === undefined || payload.questionText.length === 0)
+    ) {
+      handleCardSkip();
+      return;
+    }
+
     const loopEvent: LoopEvent =
       payload?.predictChoice === undefined
         ? { type: "ANSWER_SUBMITTED" }
