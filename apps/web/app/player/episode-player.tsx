@@ -19,9 +19,17 @@ import type {
   PlayerSegment,
   SegmentBoundary
 } from "@wonderloop/core";
+import { flushSessionRetryQueue, updateSession } from "@wonderloop/api-client";
 
 import { getBrowserSupabase } from "../auth/session";
 import { LoopCards, segmentForCard } from "./loop-cards";
+import {
+  clearSessionProgress,
+  loadSessionProgress,
+  resumePromptText,
+  saveSessionProgress,
+  type CachedSessionProgress
+} from "./session-progress-cache";
 
 type EpisodePlayerProps = {
   episodeId: string;
@@ -31,6 +39,7 @@ type EpisodePlayerProps = {
   onNewQuestionSubmitted?: (questionText: string) => void;
   onSegmentBoundary?: (boundary: SegmentBoundary) => void;
   onSessionUpdate?: (update: Partial<DailySession>, event: LoopEvent) => void;
+  sessionId?: string;
 };
 
 type AudioUrlResponse = {
@@ -62,12 +71,21 @@ export function EpisodePlayer({
   languageMode,
   onNewQuestionSubmitted,
   onSessionUpdate,
-  onSegmentBoundary
+  onSegmentBoundary,
+  sessionId
 }: EpisodePlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const currentTimeRef = useRef(0);
   const handledBoundariesRef = useRef<Set<string>>(new Set());
+  const loopStateRef = useRef<LoopState>(
+    restoreLoopStateFromSession(initialSession ?? {})
+  );
+  const pendingCacheSeekRef = useRef<number | null>(null);
   const pendingResumeAtRef = useRef<number | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [cachedProgress, setCachedProgress] = useState<CachedSessionProgress | null>(
+    null
+  );
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loopState, setLoopState] = useState<LoopState>(() =>
@@ -144,11 +162,48 @@ export function EpisodePlayer({
   }, [episodeId, initialSession]);
 
   useEffect(() => {
+    const progress = loadSessionProgress(episodeId);
+    setCachedProgress(
+      progress === null || progress.loopState.status === "completed" ? null : progress
+    );
+  }, [episodeId]);
+
+  useEffect(() => {
+    loopStateRef.current = loopState;
+  }, [loopState]);
+
+  useEffect(() => {
+    if (sessionId === undefined) {
+      return;
+    }
+
+    void flushSessionRetryQueue(getBrowserSupabase()).catch(() => undefined);
+  }, [sessionId]);
+
+  useEffect(() => {
     const audio = audioRef.current;
     if (audio !== null) {
       audio.playbackRate = playbackRate;
     }
   }, [playbackRate]);
+
+  useEffect(() => {
+    if (status !== "ready") {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      saveSessionProgress({
+        currentTime: currentTimeRef.current,
+        episodeId,
+        loopState: loopStateRef.current
+      });
+    }, 10000);
+
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, [episodeId, status]);
 
   function handleTimeUpdate() {
     const audio = audioRef.current;
@@ -159,11 +214,13 @@ export function EpisodePlayer({
     if (audio.currentTime >= plan.durationSec) {
       audio.pause();
       audio.currentTime = plan.durationSec;
+      currentTimeRef.current = plan.durationSec;
       setCurrentTime(plan.durationSec);
       setIsPlaying(false);
       return;
     }
 
+    currentTimeRef.current = audio.currentTime;
     setCurrentTime(audio.currentTime);
     const boundary = shouldPauseAt(plan, audio.currentTime);
     if (boundary === null) {
@@ -187,6 +244,7 @@ export function EpisodePlayer({
         segmentType: boundary.segmentType
       };
       const nextState = applyLoopEvent(loopEvent);
+      saveProgressCache(nextState, boundary.at);
       setSegmentCard(
         nextState.status === "completed"
           ? null
@@ -204,6 +262,7 @@ export function EpisodePlayer({
 
     if (pendingResumeAtRef.current !== null) {
       audio.currentTime = pendingResumeAtRef.current;
+      currentTimeRef.current = pendingResumeAtRef.current;
       pendingResumeAtRef.current = null;
     }
 
@@ -239,7 +298,22 @@ export function EpisodePlayer({
 
     const nextTime = clamp(audio.currentTime + deltaSeconds, 0, plan.durationSec);
     audio.currentTime = nextTime;
+    currentTimeRef.current = nextTime;
     setCurrentTime(nextTime);
+  }
+
+  function restoreCachedProgress(progress: CachedSessionProgress) {
+    pendingCacheSeekRef.current = progress.currentTime;
+    currentTimeRef.current = progress.currentTime;
+    setCurrentTime(progress.currentTime);
+    setLoopState(progress.loopState);
+    setCachedProgress(null);
+
+    const audio = audioRef.current;
+    if (audio !== null) {
+      audio.currentTime = progress.currentTime;
+      pendingCacheSeekRef.current = null;
+    }
   }
 
   function handleCardAnswer(payload?: {
@@ -272,6 +346,12 @@ export function EpisodePlayer({
     }
 
     setSegmentCard(null);
+    if (nextState.status === "completed") {
+      clearSessionProgress(episodeId);
+    } else {
+      saveProgressCache(nextState);
+    }
+
     if (nextState.status !== "completed") {
       void startPlayback();
     }
@@ -281,6 +361,12 @@ export function EpisodePlayer({
     const nextState = applyLoopEvent({ type: "SKIP" });
 
     setSegmentCard(null);
+    if (nextState.status === "completed") {
+      clearSessionProgress(episodeId);
+    } else {
+      saveProgressCache(nextState);
+    }
+
     if (nextState.status !== "completed") {
       void startPlayback();
     }
@@ -290,11 +376,31 @@ export function EpisodePlayer({
     const update = deriveSessionUpdate(loopState, event);
     if (hasSessionUpdate(update)) {
       onSessionUpdate?.(update, event);
+      if (sessionId !== undefined) {
+        void updateSession(getBrowserSupabase(), sessionId, update).catch(
+          () => undefined
+        );
+      }
     }
 
     const nextState = advance(loopState, event);
     setLoopState(nextState);
     return nextState;
+  }
+
+  function writeProgressCache() {
+    saveProgressCache(loopStateRef.current, currentTimeRef.current);
+  }
+
+  function saveProgressCache(
+    state: LoopState,
+    savedCurrentTime = currentTimeRef.current
+  ) {
+    saveSessionProgress({
+      currentTime: savedCurrentTime,
+      episodeId,
+      loopState: state
+    });
   }
 
   const progressPercent =
@@ -303,6 +409,30 @@ export function EpisodePlayer({
 
   return (
     <section className="episodePlayer" aria-label="Episode player">
+      {cachedProgress !== null ? (
+        <div className="resumePrompt" role="status">
+          <span>{resumePromptText(cachedProgress)}</span>
+          <button
+            onClick={() => {
+              restoreCachedProgress(cachedProgress);
+            }}
+            type="button"
+          >
+            Resume / 继续
+          </button>
+          <button
+            className="secondaryButton"
+            onClick={() => {
+              clearSessionProgress(episodeId);
+              setCachedProgress(null);
+            }}
+            type="button"
+          >
+            Start Over / 重新开始
+          </button>
+        </div>
+      ) : null}
+
       {episodeContent !== undefined && cardStatus !== null ? (
         <LoopCards
           bridge={episodeContent.bilingual_bridge}
@@ -319,8 +449,15 @@ export function EpisodePlayer({
           onEnded={() => {
             setIsPlaying(false);
           }}
+          onLoadedMetadata={() => {
+            if (pendingCacheSeekRef.current !== null && audioRef.current !== null) {
+              audioRef.current.currentTime = pendingCacheSeekRef.current;
+              pendingCacheSeekRef.current = null;
+            }
+          }}
           onPause={() => {
             setIsPlaying(false);
+            writeProgressCache();
           }}
           onPlay={() => {
             setIsPlaying(true);

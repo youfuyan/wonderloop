@@ -577,6 +577,37 @@ audio {
   padding: 18px;
 }
 
+.resumePrompt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid rgba(32, 57, 47, 0.14);
+  border-radius: 8px;
+  background: #f5fbf8;
+  padding: 12px;
+  color: #17221f;
+}
+
+.resumePrompt span {
+  flex: 1 1 220px;
+}
+
+.resumePrompt button {
+  min-height: 40px;
+  border: 1px solid rgba(32, 57, 47, 0.18);
+  border-radius: 8px;
+  background: #20392f;
+  padding: 0 12px;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.resumePrompt .secondaryButton {
+  background: #ffffff;
+  color: #20392f;
+}
+
 .loopCard {
   display: grid;
   gap: 14px;
