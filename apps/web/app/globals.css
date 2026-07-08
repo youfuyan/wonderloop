@@ -836,6 +836,265 @@ audio {
   line-height: 1.45;
 }
 
+.todayShell {
+  min-height: 100vh;
+  background: #eef4ef;
+  padding: 24px 18px 104px;
+}
+
+.todayContent {
+  display: grid;
+  width: min(760px, 100%);
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.todayHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.todayHeader p,
+.todayHeader h1,
+.todayHeader span,
+.todayTitleBlock h2,
+.todayTitleBlock p,
+.todayTitleBlock span,
+.weekProgressCard h2,
+.weekProgressCard p,
+.todayEmpty h2,
+.todayEmpty p,
+.upgradeHint h2,
+.upgradeHint p {
+  margin: 0;
+}
+
+.todayHeader p {
+  color: #3f6f8f;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.todayHeader h1 {
+  margin-top: 4px;
+  color: #17221f;
+  font-size: clamp(30px, 7vw, 46px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.todayHeader span,
+.todayTitleBlock p,
+.weekProgressCard p,
+.todayMessage,
+.todayChildNote,
+.todayNotice,
+.upgradeHint p {
+  color: #465a53;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.childSelector {
+  display: grid;
+  min-width: 160px;
+  gap: 6px;
+  color: #465a53;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.childSelector select {
+  min-height: 44px;
+  border: 1px solid rgba(32, 57, 47, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0 12px;
+  color: #17221f;
+  font-weight: 800;
+}
+
+.childSelector select:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.todayMainCard,
+.weekProgressCard,
+.upgradeHint {
+  display: grid;
+  gap: 16px;
+  border: 1px solid rgba(32, 57, 47, 0.14);
+  border-radius: 8px;
+  background: #fffdf8;
+  padding: clamp(20px, 5vw, 30px);
+  box-shadow: 0 18px 60px rgba(23, 34, 31, 0.1);
+}
+
+.todayCardTopline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #3f6f8f;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.todayCardTopline strong {
+  border-radius: 999px;
+  background: #e6eef5;
+  padding: 6px 10px;
+  color: #294e67;
+  font-size: 12px;
+}
+
+.todayTitleBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.todayTitleBlock h2,
+.todayEmpty h2,
+.upgradeHint h2 {
+  color: #17221f;
+  font-size: clamp(26px, 6vw, 40px);
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.todayTitleBlock span {
+  color: #3f6f8f;
+  font-weight: 900;
+}
+
+.todayNotice {
+  border-left: 4px solid #efc46f;
+  padding-left: 12px;
+}
+
+.todayState {
+  width: fit-content;
+  margin: 0;
+  border-radius: 999px;
+  background: #e7f0ec;
+  padding: 8px 12px;
+  color: #20392f;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.todayPlayButton,
+.upgradeHint a {
+  display: grid;
+  min-height: 54px;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #ef7b57;
+  color: #ffffff;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.todayPlayButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
+.todayCompleteMark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #20392f;
+  font-weight: 900;
+}
+
+.todayCompleteMark strong {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 999px;
+  background: #8eb9a8;
+  color: #ffffff;
+  font-size: 26px;
+}
+
+.weekProgressCard {
+  box-shadow: none;
+}
+
+.weekProgressCard h2 {
+  color: #17221f;
+  font-size: 22px;
+  letter-spacing: 0;
+}
+
+.weekDots {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.weekDots span {
+  min-height: 20px;
+  border: 1px solid rgba(32, 57, 47, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.weekDots .isComplete {
+  border-color: #3f6f8f;
+  background: #3f6f8f;
+}
+
+.todayMessage,
+.todayChildNote {
+  margin: 0;
+}
+
+.upgradeHint {
+  background: #f8fbff;
+}
+
+.bottomNav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid rgba(32, 57, 47, 0.14);
+  background: rgba(255, 253, 248, 0.96);
+  box-shadow: 0 -12px 40px rgba(23, 34, 31, 0.12);
+}
+
+.bottomNav a {
+  display: grid;
+  min-height: 68px;
+  place-items: center;
+  gap: 2px;
+  color: #465a53;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.bottomNav a[aria-current="page"] {
+  color: #ef7b57;
+}
+
+.bottomNav small {
+  font-size: 11px;
+  font-weight: 800;
+}
+
 @media (max-width: 560px) {
   .buttonRow {
     grid-template-columns: 1fr;
@@ -851,5 +1110,14 @@ audio {
 
   .bilingualBridgeCard {
     grid-template-columns: 1fr;
+  }
+
+  .todayHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .childSelector {
+    min-width: 0;
   }
 }

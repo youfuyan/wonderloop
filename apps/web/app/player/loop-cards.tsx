@@ -295,6 +295,7 @@ function NewQuestionCard({
       <label className="parentQuestionField">
         <span>Parent-entered child question / 家长帮孩子记下这个问题</span>
         <textarea
+          maxLength={300}
           onChange={(event) => {
             setQuestionText(event.target.value);
           }}

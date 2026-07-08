@@ -55,6 +55,15 @@ export function isLoopComplete(session: LoopSessionProgress): boolean {
   );
 }
 
+export function isDailySessionLoopComplete(session: Partial<DailySession>): boolean {
+  return (
+    session.listened === true &&
+    session.answered_think === true &&
+    session.taught_back === true &&
+    session.asked_new_question === true
+  );
+}
+
 export function advance(state: LoopState, event: LoopEvent): LoopState {
   const nextState = applyEvent(state, event);
 

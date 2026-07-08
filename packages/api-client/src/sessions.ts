@@ -4,6 +4,7 @@ import type { Database } from "./database.types";
 
 type DailySessionRow = Database["public"]["Tables"]["daily_sessions"]["Row"];
 type DailySessionInsert = Database["public"]["Tables"]["daily_sessions"]["Insert"];
+type DailySessionTableUpdate = Database["public"]["Tables"]["daily_sessions"]["Update"];
 type DailySessionUpdate = Pick<
   DailySessionRow,
   | "answered_think"
@@ -35,6 +36,7 @@ export type GetOrCreateSessionParams = {
   childProfileId?: string | null;
   episodeId: string;
   languageMode: Database["public"]["Enums"]["language_mode"];
+  sessionDate?: string;
 };
 
 export type QueuedSessionUpdate = {
@@ -122,6 +124,37 @@ export async function getOrCreateSession(
   return data;
 }
 
+export async function claimUnstartedSessionChildProfile(
+  client: WonderLoopSupabaseClient,
+  session: DailySessionRow,
+  childProfileId?: string | null
+): Promise<DailySessionRow> {
+  const nextChildProfileId = childProfileId ?? null;
+
+  if (
+    session.child_profile_id === nextChildProfileId ||
+    hasStartedSessionProgress(session)
+  ) {
+    return session;
+  }
+
+  const update = {
+    child_profile_id: nextChildProfileId
+  } satisfies Pick<DailySessionTableUpdate, "child_profile_id">;
+  const { data, error } = await client
+    .from("daily_sessions")
+    .update(update)
+    .eq("id", session.id)
+    .select("*")
+    .single();
+
+  if (error !== null) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
 export async function updateSession(
   client: WonderLoopSupabaseClient,
   sessionId: string,
@@ -172,12 +205,18 @@ export function buildSessionUpsert(
   familyId: string,
   params: GetOrCreateSessionParams
 ): DailySessionInsert {
-  return {
+  const insert: DailySessionInsert = {
     child_profile_id: params.childProfileId ?? null,
     episode_id: params.episodeId,
     family_id: familyId,
     language_mode: params.languageMode
   };
+
+  if (params.sessionDate !== undefined) {
+    insert.session_date = params.sessionDate;
+  }
+
+  return insert;
 }
 
 export function buildDedupedSessionUpdate(
@@ -283,6 +322,16 @@ export async function flushQueuedSessionUpdates(
 
 function hasSessionUpdate(update: SessionUpdatePayload): boolean {
   return Object.keys(update).length > 0;
+}
+
+function hasStartedSessionProgress(session: DailySessionRow): boolean {
+  return (
+    session.listened ||
+    session.predict_choice !== null ||
+    session.answered_think ||
+    session.taught_back ||
+    session.asked_new_question
+  );
 }
 
 async function getCurrentFamilyId(client: WonderLoopSupabaseClient): Promise<string> {

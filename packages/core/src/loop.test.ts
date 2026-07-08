@@ -4,6 +4,7 @@ import {
   advance,
   deriveSessionUpdate,
   initialLoopState,
+  isDailySessionLoopComplete,
   isLoopComplete,
   restoreLoopStateFromSession,
   type DailySession,
@@ -30,6 +31,25 @@ describe("loop state machine", () => {
     expect(isLoopComplete({ ...complete, answeredThink: false })).toBe(false);
     expect(isLoopComplete({ ...complete, taughtBack: false })).toBe(false);
     expect(isLoopComplete({ ...complete, askedNewQuestion: false })).toBe(false);
+  });
+
+  it("matches SQL loop_complete for persisted daily-session fields", () => {
+    expect(
+      isDailySessionLoopComplete({
+        answered_think: true,
+        asked_new_question: true,
+        listened: true,
+        taught_back: true
+      })
+    ).toBe(true);
+    expect(
+      isDailySessionLoopComplete({
+        answered_think: false,
+        asked_new_question: true,
+        listened: true,
+        taught_back: true
+      })
+    ).toBe(false);
   });
 
   it.each([

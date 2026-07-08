@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   buildDedupedSessionUpdate,
   buildSessionUpsert,
+  claimUnstartedSessionChildProfile,
   enqueueSessionUpdate,
   flushQueuedSessionUpdates,
   getRecentRecallPlan,
@@ -58,6 +59,18 @@ describe("session insert payload", () => {
     });
   });
 
+  it("can pin the session date to the family's today", () => {
+    expect(
+      buildSessionUpsert("family-1", {
+        episodeId: "episode-1",
+        languageMode: "bilingual",
+        sessionDate: "2026-07-07"
+      })
+    ).toMatchObject({
+      session_date: "2026-07-07"
+    });
+  });
+
   it("returns an existing session without overwriting child or language fields", async () => {
     const insert = vi.fn();
     const maybeSingle = vi.fn<() => Promise<{ data: DailySessionRow; error: null }>>();
@@ -98,6 +111,46 @@ describe("session insert payload", () => {
     expect(existing.language_mode).toBe("zh");
     expect(insert).not.toHaveBeenCalled();
     expect(from).not.toHaveBeenCalledWith("families");
+  });
+});
+
+describe("claimUnstartedSessionChildProfile", () => {
+  it("updates child ownership for an untouched session", async () => {
+    const single = vi
+      .fn<() => Promise<{ data: DailySessionRow; error: null }>>()
+      .mockResolvedValue({
+        data: { ...session, child_profile_id: "child-2" },
+        error: null
+      });
+    const select = vi.fn(() => ({ single }));
+    const eq = vi.fn(() => ({ select }));
+    const update = vi.fn(() => ({ eq }));
+    const from = vi.fn(() => ({ update }));
+
+    await expect(
+      claimUnstartedSessionChildProfile(
+        { from } as unknown as Parameters<typeof claimUnstartedSessionChildProfile>[0],
+        session,
+        "child-2"
+      )
+    ).resolves.toMatchObject({ child_profile_id: "child-2" });
+
+    expect(update).toHaveBeenCalledWith({ child_profile_id: "child-2" });
+    expect(eq).toHaveBeenCalledWith("id", "session-1");
+  });
+
+  it("does not rewrite a session after loop progress has started", async () => {
+    const from = vi.fn();
+
+    await expect(
+      claimUnstartedSessionChildProfile(
+        { from } as unknown as Parameters<typeof claimUnstartedSessionChildProfile>[0],
+        { ...session, listened: true },
+        "child-2"
+      )
+    ).resolves.toMatchObject({ child_profile_id: null });
+
+    expect(from).not.toHaveBeenCalled();
   });
 });
 
