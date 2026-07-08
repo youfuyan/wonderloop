@@ -1334,6 +1334,206 @@ audio {
   font-size: 16px;
 }
 
+.questionsShell {
+  min-height: 100vh;
+  background: #eef4ef;
+  padding: 24px 18px 104px;
+}
+
+.questionsContent {
+  display: grid;
+  width: min(840px, 100%);
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.questionsHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.questionsHeader p,
+.questionsHeader h1,
+.questionsHeader span,
+.questionStats strong,
+.questionStats span,
+.questionComposer p,
+.questionEmpty h2,
+.questionEmpty p,
+.questionItem p,
+.questionsMessage {
+  margin: 0;
+}
+
+.questionsHeader p {
+  color: #3f6f8f;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.questionsHeader h1 {
+  margin-top: 4px;
+  color: #17221f;
+  font-size: clamp(30px, 7vw, 46px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.questionsHeader span,
+.questionStats span,
+.questionComposer p,
+.questionEmpty p,
+.questionsMessage {
+  color: #465a53;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.questionsHeader button,
+.questionComposer button,
+.questionActions button {
+  min-height: 42px;
+  border: 1px solid rgba(32, 57, 47, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0 12px;
+  color: #20392f;
+  font-weight: 900;
+}
+
+.questionsHeader button:disabled,
+.questionComposer button:disabled,
+.questionActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.questionStats,
+.questionComposer,
+.questionEmpty,
+.questionItem {
+  border: 1px solid rgba(32, 57, 47, 0.14);
+  border-radius: 8px;
+  background: #fffdf8;
+  padding: 18px;
+  box-shadow: 0 18px 60px rgba(23, 34, 31, 0.1);
+}
+
+.questionStats {
+  display: grid;
+  gap: 4px;
+}
+
+.questionStats strong {
+  color: #17221f;
+  font-size: 22px;
+}
+
+.questionComposer,
+.questionComposer label,
+.editQuestionForm {
+  display: grid;
+  gap: 10px;
+}
+
+.questionComposer label,
+.editQuestionForm span {
+  color: #465a53;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.questionComposer textarea,
+.questionComposer select,
+.editQuestionForm textarea {
+  width: 100%;
+  border: 1px solid rgba(32, 57, 47, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #17221f;
+  font: inherit;
+}
+
+.questionComposer textarea,
+.editQuestionForm textarea {
+  min-height: 96px;
+  resize: vertical;
+  padding: 12px;
+  overflow-wrap: anywhere;
+}
+
+.questionComposer select {
+  min-height: 42px;
+  padding: 0 10px;
+}
+
+.questionComposerActions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 10px;
+  align-items: end;
+}
+
+.questionList {
+  display: grid;
+  gap: 12px;
+}
+
+.questionItem {
+  display: grid;
+  gap: 12px;
+  box-shadow: none;
+}
+
+.questionItem p {
+  color: #17221f;
+  font-size: 18px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.questionMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #465a53;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.questionMeta span,
+.questionMeta strong {
+  border-radius: 999px;
+  background: #e7f0ec;
+  padding: 6px 9px;
+}
+
+.questionMeta strong {
+  color: #20392f;
+}
+
+.questionActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.questionEmpty {
+  display: grid;
+  gap: 8px;
+  background: #f8fbff;
+}
+
+.questionEmpty h2 {
+  color: #17221f;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
 @media (max-width: 560px) {
   .buttonRow {
     grid-template-columns: 1fr;
@@ -1368,5 +1568,14 @@ audio {
   .calendarDay {
     min-height: 58px;
     padding: 7px;
+  }
+
+  .questionsHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .questionComposerActions {
+    grid-template-columns: 1fr;
   }
 }
