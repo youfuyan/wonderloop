@@ -1095,6 +1095,245 @@ audio {
   font-weight: 800;
 }
 
+.calendarShell {
+  min-height: 100vh;
+  background: #eef4ef;
+  padding: 24px 18px 104px;
+}
+
+.calendarContent {
+  display: grid;
+  width: min(840px, 100%);
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.calendarHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.calendarHeader p,
+.calendarHeader h1,
+.calendarHeader span,
+.calendarSummary strong,
+.calendarSummary span,
+.dayDrawer p,
+.dayDrawer h2,
+.dayDrawer h3 {
+  margin: 0;
+}
+
+.calendarHeader p {
+  color: #3f6f8f;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.calendarHeader h1 {
+  margin-top: 4px;
+  color: #17221f;
+  font-size: clamp(30px, 7vw, 46px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.calendarHeader span,
+.calendarSummary span,
+.calendarMessage,
+.dayDrawer p {
+  color: #465a53;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.monthControls {
+  display: flex;
+  gap: 8px;
+}
+
+.monthControls button,
+.dayDrawer button {
+  min-height: 42px;
+  border: 1px solid rgba(32, 57, 47, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0 12px;
+  color: #20392f;
+  font-weight: 900;
+}
+
+.calendarSummary,
+.calendarCard {
+  border: 1px solid rgba(32, 57, 47, 0.14);
+  border-radius: 8px;
+  background: #fffdf8;
+  padding: 18px;
+  box-shadow: 0 18px 60px rgba(23, 34, 31, 0.1);
+}
+
+.calendarSummary {
+  display: grid;
+  gap: 4px;
+}
+
+.calendarSummary strong {
+  color: #17221f;
+  font-size: 22px;
+}
+
+.calendarWeekdays,
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.calendarWeekdays {
+  margin-bottom: 8px;
+  color: #6d7a75;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.calendarDay {
+  position: relative;
+  display: grid;
+  min-height: 74px;
+  place-items: start;
+  border: 1px solid rgba(32, 57, 47, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 9px;
+  color: #17221f;
+  font-weight: 900;
+}
+
+.calendarDay[data-outside-month="true"] {
+  color: #98a29d;
+  cursor: default;
+  opacity: 0.58;
+}
+
+.calendarDay:disabled {
+  pointer-events: none;
+}
+
+.calendarMark {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+}
+
+.calendarMark-complete {
+  background: #3f6f8f;
+}
+
+.calendarMark-partial {
+  background: linear-gradient(90deg, #3f6f8f 50%, #dfe7e3 50%);
+}
+
+.calendarMark-listened {
+  background: #c9ddd4;
+}
+
+.calendarMark-none {
+  border: 1px solid #dfe7e3;
+}
+
+.calendarLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #465a53;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.calendarLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendarLegend i {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+}
+
+.legendComplete {
+  background: #3f6f8f;
+}
+
+.legendPartial {
+  background: linear-gradient(90deg, #3f6f8f 50%, #dfe7e3 50%);
+}
+
+.legendListened {
+  background: #c9ddd4;
+}
+
+.dayDrawer {
+  position: fixed;
+  right: 0;
+  bottom: 68px;
+  left: 0;
+  display: grid;
+  max-height: min(58vh, 480px);
+  gap: 12px;
+  overflow: auto;
+  border-top: 1px solid rgba(32, 57, 47, 0.14);
+  background: #fffdf8;
+  padding: 18px max(18px, calc((100vw - 840px) / 2));
+  box-shadow: 0 -18px 60px rgba(23, 34, 31, 0.16);
+}
+
+.dayDrawer button {
+  justify-self: end;
+}
+
+.dayDrawer h2 {
+  color: #17221f;
+  font-size: 22px;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
+.segmentChecklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.segmentChecklist li {
+  border-radius: 999px;
+  background: #e7f0ec;
+  padding: 8px 10px;
+  color: #20392f;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.drawerQuestions {
+  display: grid;
+  gap: 8px;
+}
+
+.drawerQuestions h3 {
+  color: #17221f;
+  font-size: 16px;
+}
+
 @media (max-width: 560px) {
   .buttonRow {
     grid-template-columns: 1fr;
@@ -1119,5 +1358,15 @@ audio {
 
   .childSelector {
     min-width: 0;
+  }
+
+  .calendarHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .calendarDay {
+    min-height: 58px;
+    padding: 7px;
   }
 }
